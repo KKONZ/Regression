@@ -24,3 +24,24 @@ t.test(subset(cars,cars$am=="1",select=c(mpg))[,1],
 
 ```
 
+We can see that from above the t test for automatic and manual transmissions in the mtcars data yeilds a p value below  the level of significance of $\alpha$ = .05. This suggests we have evidence to reject the null hypothesis that the mean difference between the 2 transmission types are 0. We can therefore reject the null hypothesis for this test. 
+Next we will use Stepwise comparison using AIC to select the final 
+```{r}
+
+library("caret")
+fit <- train(mpg~.,data = mtcars, method = "lmStepAIC")
+summary(fit <- lm(mpg~ wt + qsec + factor(am), data = mtcars))
+
+par(mfrow = c(2,2))
+plot(fit)
+```
+
+
+Next test if there is a significant difference if automatic or manual transmissions make a difference using a wald test
+
+```{r}
+library(aod)
+wald.test(b = coef(fit), Sigma = vcov(fit), Terms = 4)
+```
+
+From the output above we can see there is a slight but significant, at a 5% level of significance, for the am term in this model.
