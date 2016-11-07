@@ -16,6 +16,8 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ```{r cars}
+options(warn=-1)
+set.seed(1234)
 cars <- mtcars
 cars$am <- as.character(cars$am)
  
@@ -29,15 +31,15 @@ Next we will use Stepwise comparison using AIC to select the final
 ```{r}
 
 library("caret")
-fit <- train(mpg~.,data = mtcars, method = "lmStepAIC")
-summary(fit <- lm(mpg~ wt + qsec + factor(am), data = mtcars))
+train(mpg~.,data = mtcars, method = "lmStepAIC")
+summary(fit <- lm(mpg~ wt + qsec + am, data = mtcars))
 
 par(mfrow = c(2,2))
 plot(fit)
 ```
 
 
-Next test if there is a significant difference if automatic or manual transmissions make a difference using a wald test
+Next test if there is a significant difference if automatic or manual transmissions term in this model performing a wald test.
 
 ```{r}
 library(aod)
