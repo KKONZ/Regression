@@ -8,12 +8,21 @@ output: pdf_document
 #Executive Summary
 This project aims to answer the question is automatic or manual transmissions better for MPG and quantify the MPG difference between automatic and manual transmissions
 
+##Exploratory Analysis
+Let's first examine the structure of the data
+
+```{r}
+str(mtcars)
+```
+
+Next, let's conduct a t test for the mean MPG between automatic and manual transmitions to see if there is a difference.
+
 ```{r cars}
 options(warn=-1)
 set.seed(1234)
 mtcars$am <- as.character(mtcars$am)
 t.test(subset(mtcars,mtcars$am=="1",select=c(mpg))[,1]
-       , subset(mtcars,mtcars$am=="0",select=c(mpg))[,1])$p.value
+       , subset(mtcars,mtcars$am=="0",select=c(mpg))[,1])
 ```
 
 We can see that from above the t test for automatic and manual transmissions in the mtcars data yeilds a p value below  the level of significance of $\alpha$ = .05. This suggests we have evidence to reject the null hypothesis that the mean difference between the 2 transmission types are 0. We can therefore reject the null hypothesis for this test. 
@@ -27,11 +36,11 @@ Next test if there is a significant difference if automatic or manual transmissi
 
 ```{r}
 library(aod)
-test <- wald.test(b = coef(fit), Sigma = vcov(fit), Terms = 4)
+wald.test(b = coef(fit), Sigma = vcov(fit), Terms = 4)
 ```
 
 From the output above we can see there is a slight but significant, at a 5% level of significance, for the am term in this model.
-Finally we will look at residual plots for the final model called fit.
+Finally we will look at residual plots and coefficients for the final model called fit.
 ```{r, fig.height= 5}
 summary(fit)$coef
 par(mfrow = c(2,2))
@@ -39,5 +48,6 @@ plot(fit)
 
 ```
 
-This analysis shows there is evidence of a difference in the MPG between automatic and manual transmissions. Based on the final model the MPG is roughly 2.94 higher for manual transmissions than for automatics. The residual plots show that for the most part the residuals meet the assumptions for normality and homoskedasticity.
+# Conclusion
+This analysis shows there is evidence of a difference in the MPG between automatic and manual transmissions. Based on the final model the MPG is roughly 2.94 higher for manual transmissions than for automatics when holding the other important predictors constant. Doing a simple t test showed a difference of about 7 between the 2 transmission types. The residual plots show that the residuals meet the assumptions for normality and homoskedasticity.
 
